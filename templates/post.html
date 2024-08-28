@@ -1,0 +1,68 @@
+{% from "bootstrap5/form.html" import render_form %}
+{% include "header.html" %}
+
+        <!-- Page Header-->
+        <header class="masthead" style="background-image: url({{post.img_url}})">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="post-heading">
+                            <h1>{{ post.title}}</h1>
+                            <h2 class="subheading">{{post.subtitle}}</h2>
+                            <span class="meta">
+                                Posted by
+                                <a href="#!">{{ post.author.name }}</a>
+                                on {{post.date}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Post Content-->
+        <article class="mb-4">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        {{ post.body | safe }}
+                        
+                    </div>
+                    <div class="d-flex justify-content-end mb-4">
+                      <!-- TODO: Editing posts-->
+                      {% if current_user.id == 1 %}
+                      <a
+                        class="btn btn-primary float-right"
+                        href="{{ url_for('edit_post', post_id=post['id']) }}"
+                        >Edit Post</a>
+                      {% endif %}
+
+                    </div>
+
+                    <div class="col-lg-8 col-md-10 mx-auto">
+                        <h1>Comments</h1>
+                      {% for comment in comments %}
+                        <div class="comment-preview">
+                            <p class="post-meta">
+                                Posted by
+
+                            <img src="{{ comment.user.email | gravatar(size=20, rating='x') }}" alt="{{ comment.user.name }}'s avatar">
+                                <a class="comment-author">{{ comment.user.name }}</a>
+                            </p>
+                                <p class="comment-body">{{ comment.body | safe }}</p>
+                        </div>
+                      {% endfor %}
+                    </div>
+
+                    {% if  current_user.is_active %}
+                    <h1>Add comment</h1>
+                    <div class="col-lg-8 col-md-10 mx-auto">
+                      {{ ckeditor.load() }}
+                      {{ ckeditor.config(name='body') }}
+                      {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </article>
+
+{% include "footer.html" %}
