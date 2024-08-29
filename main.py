@@ -21,14 +21,14 @@ from flask_gravatar import Gravatar
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = os.environ.get("FLASK_KEY")
 ckeditor = CKEditor(app)
 Bootstrap5(app)
 
 data_endpoint = "https://api.npoint.io/650c81581d282bf58934"
 posts = requests.get(data_endpoint).json()
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI")
 
 db = SQLAlchemy(app)
 
